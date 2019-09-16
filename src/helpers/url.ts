@@ -1,4 +1,4 @@
-import { isDate, isObject } from "./util";
+import { isDate, isPlainObject } from "./util";
 
 /**
  * 对url字符串进行编码。但是同时，对其中一些字符不进行编码，要转换回来
@@ -43,12 +43,12 @@ export function buildURL(url: string, params?: any): string {
             // 2、如果参数值是日期类型
             if (isDate(val)) {
                 val = val.toISOString();
-            } else if (isObject(val)) {
+            } else if (isPlainObject(val)) {
                 // 3、如果参数值是普通对象
                 val = JSON.stringify(val);
             }
             // 生成参数字符串时，需要对内容进行encode
-            parts.push(`${key}=${val}`);
+            parts.push(`${encode(key)}=${encode(val)}`);
         });
     });
 
@@ -63,7 +63,7 @@ export function buildURL(url: string, params?: any): string {
         }
 
         // url如果本来已经带了?号，说明本身有参数，后面拼接&符号；如果没有?号，那么拼接?号再拼接参数
-        url = url + (url.indexOf('?') === -1) ? '?' : '&' + serializedParams;
+        url = url + ((url.indexOf('?') === -1) ? '?' : '&') + serializedParams;
     }
 
     return url;
