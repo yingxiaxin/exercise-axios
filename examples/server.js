@@ -34,6 +34,10 @@ app.use(router)
 setSimpleRouter();
 setBaseRouter();
 setErrorRouter();
+setExtendRouter();
+setInterceptorRouter();
+setConfigRouter();
+setCancelRouter();
 
 function setSimpleRouter() {
     router.get('/simple/get', function (req, res) {
@@ -85,4 +89,73 @@ function setErrorRouter() {
             })
         }, 3000)
     })
+}
+
+function setExtendRouter() {
+    router.get('/extend/get', function (req, res) {
+        res.json({
+            msg: 'hello world'
+        })
+    });
+
+    router.options('/extend/options', function (req, res) {
+        res.end()
+    });
+
+    router.delete('/extend/delete', function (req, res) {
+        res.end()
+    });
+
+    router.head('/extend/head', function (req, res) {
+        res.end()
+    });
+
+    router.post('/extend/post', function (req, res) {
+        res.json(req.body)
+    });
+
+    router.put('/extend/put', function (req, res) {
+        res.json(req.body)
+    });
+
+    router.patch('/extend/patch', function (req, res) {
+        res.json(req.body)
+    });
+
+    router.get('/extend/user', function (req, res) {
+        res.json({
+            code: 0,
+            message: 'ok',
+            result: {
+                name: 'jack',
+                age: 18
+            }
+        });
+    });
+}
+
+function setInterceptorRouter() {
+    router.get('/interceptor/get', function (req, res) {
+        res.end('hello');
+    })
+}
+
+function setConfigRouter() {
+    router.post('/config/post', function (req, res) {
+        res.json(req.body);
+    });
+}
+
+function setCancelRouter() {
+    router.get('/cancel/get', function (req, res) {
+        setTimeout(() => {
+            res.json('hello');
+        }, 1000);
+    });
+
+    router.post('/cancel/post', function (req, res) {
+        setTimeout(() => {
+            res.json(req.body);
+        }, 1000);
+    });
 }

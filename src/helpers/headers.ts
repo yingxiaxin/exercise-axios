@@ -1,4 +1,5 @@
-import { isPlainObject } from './util';
+import { isPlainObject, deepMerge } from './util';
+import { Method } from '../types';
 
 /**
  * 将headers里的配置项属性，归一化成指定的命名下
@@ -20,6 +21,7 @@ function normalizeHeaderName(headers: any, normalizedName: string): void {
 
 /**
  * 处理请求的headers
+ * 如果要发送的对象是普通对象，那么将请求头content-type设置为applications/json;charset=utf-8
  * @param headers 配置config的headers配置项
  * @param data 请求的数据data
  */
@@ -57,4 +59,20 @@ export function parseHeaders(headers: string): any {
     });
 
     return parsed;
+}
+
+export function flatternHeaders(headers: any, method: Method): any {
+    if (!headers) {
+        return headers;
+    }
+
+    headers = deepMerge(headers.common || {}, headers[method] || {}, headers);
+
+    const methodsToDelete = ['delete', 'get', 'head', 'options', 'post', 'put', 'patch', 'common'];
+
+    methodsToDelete.forEach(method => {
+        delete headers[method];
+    });
+
+    return headers;
 }
